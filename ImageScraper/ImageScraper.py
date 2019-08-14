@@ -2,10 +2,12 @@ import urllib.request, requests
 URL = "https://designyoutrust.com/2019/01/artist-creates-illustrations-that-turn-loneliness-into-magic/"
 PATH = "D:/Pictures/PulledFromInternet/"
 EXTENSTION = ".jpg"
-name = " Jenny Wu "
-n = 0
 
-def DownloadIMG():
+
+n = 0
+name = " Jenny Wu "
+
+def DownloadIMG(FileURL):
     global n
     print("File URL: ", FileURL)
     print("downloading image from URL...")
@@ -15,42 +17,38 @@ def DownloadIMG():
 
 
 
-
-r = requests.get(URL)
-currentLine = ""
-imgTag = False
-foundSource = False
-FileURL = ""
-for i in range(len(r.text)):
-    character = r.text[i]
-    FileURL = ""
+def FindImages():
+    currentLine = ""
     foundSource = False
-    if currentLine == "<img":
-        imgTag = True
-        currentLine = ""
-        while character != ">":
-            character = r.text[i]
-            i += 1
-            character = r.text[i]
-            currentLine += character
-            if character == " ":
-                currentLine = ""
-            if foundSource:
-                if character != " ":
-                    FileURL += character
-                else:
-                    DownloadIMG()
+    FileURL = ""
+
+    r = requests.get(URL)
+    for i in range(len(r.text)):
+        character = r.text[i]
+        FileURL = ""
+        foundSource = False
+        if currentLine == "<img":
+            currentLine = ""
+            while character != ">":
+                character = r.text[i]
+                i += 1
+                character = r.text[i]
+                currentLine += character
+                if character == " ":
                     currentLine = ""
-                    break
-            if currentLine == "src=\"":
-                foundSource = True
-                
-    if character == '<':
-        currentLine = ""
-    currentLine += character
+                if foundSource:
+                    if character != " ":
+                        FileURL += character
+                    else:
+                        DownloadIMG(FileURL)
+                        currentLine = ""
+                        break
+                if currentLine == "src=\"":
+                    foundSource = True
+                    
+        if character == '<':
+            currentLine = ""
+        currentLine += character
 
 
-
-
-#page_source = response.read()
-#urllib.request.urlretrieve(URL, PATH + name)
+FindImages()
