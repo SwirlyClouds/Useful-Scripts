@@ -1,16 +1,23 @@
 import urllib.request, requests, os
+
 #URL of website to pull images from
 URL = "https://designyoutrust.com/2019/08/artist-creates-modern-landscapes-in-his-unique-abstract-style/"
-#location to save images to
+
+#location to save images to (can be left blank if using default path)
 PATH = "D:/Pictures/PulledFromInternet/"
+
+#Use default path for pictures library?
+DefaultPicturesPath = True
 
 #set to JPEG by default 
 EXTENSTION = ".jpg"
 
+#Name of Folder To Save into and prefix for filenames
+name = "Jason Anderson Abstract Landscapes "
 
+
+#Image counter - do not change
 n = 0
-name = " Jason Anderson Abstract Landscapes "
-
 def getExtention(FileURL):
     global EXTENSTION
     Extensions = [".jpg", ".jpeg" , ".bmp", ".gif", ".png", ".vec"]
@@ -68,6 +75,14 @@ def FindImages():
     return
 def init():
     global PATH
+    if DefaultPicturesPath:
+        import ctypes.wintypes
+        SHGFP_TYPE_CURRENT = 0   # Want current, not default value
+        ID = 39 # ID for Picture Folder Location
+        buf = ctypes.create_unicode_buffer(ctypes.wintypes.MAX_PATH)
+        ctypes.windll.shell32.SHGetFolderPathW(0, ID, 0, SHGFP_TYPE_CURRENT, buf)
+        PATH = buf.value + "/"
+        
     PATH += (name + "/")
     # Create target Directory if don't exist
     if not os.path.exists(PATH):
