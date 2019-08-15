@@ -1,33 +1,43 @@
-import urllib.request, requests
-URL = "https://designyoutrust.com/2019/01/artist-creates-illustrations-that-turn-loneliness-into-magic/"
+import urllib.request, requests, os
+URL = "https://designyoutrust.com/2019/08/artist-creates-modern-landscapes-in-his-unique-abstract-style/"
 PATH = "D:/Pictures/PulledFromInternet/"
 EXTENSTION = ".jpg"
 
 
 n = 0
-name = " Jenny Wu "
+name = " Jason Anderson Abstract Landscapes "
 
+def getExtention(FileURL):
+    global EXTENSTION
+    Extensions = [".jpg", ".jpeg" , ".bmp", ".gif", ".png", ".vec"]
+    for ex in Extensions:
+        if ex in FileURL:
+            EXTENSTION = ex
+    return
 def DownloadIMG(FileURL):
     global n
     print("File URL: ", FileURL)
+    getExtention(FileURL)
     print("downloading image from URL...")
-    urllib.request.urlretrieve(FileURL, PATH + name + str(n) + EXTENSTION)
+    urllib.request.urlretrieve(FileURL, PATH +  name + str(n) + EXTENSTION)
     print("Saved into location: ", PATH + name + str(n) + EXTENSTION)
     n += 1
-
+    return
 
 
 def FindImages():
     currentLine = ""
     foundSource = False
+    IMGTag = False
     FileURL = ""
-
     r = requests.get(URL)
     for i in range(len(r.text)):
         character = r.text[i]
         FileURL = ""
         foundSource = False
         if currentLine == "<img":
+            IMGTag = True
+            print("Found img tag")
             currentLine = ""
             while character != ">":
                 character = r.text[i]
@@ -49,6 +59,23 @@ def FindImages():
         if character == '<':
             currentLine = ""
         currentLine += character
-
-
-FindImages()
+    if not IMGTag:
+        print("No img tags found")
+    return
+def init():
+    global PATH
+    PATH += (name + "/")
+    # Create target Directory if don't exist
+    if not os.path.exists(PATH):
+        os.mkdir(PATH)
+        print("Directory " , PATH ,  " Created ")
+    else:    
+        print("Directory " , PATH ,  " already exists")
+    return
+init()
+try:
+    FindImages()
+except (KeyboardInterrupt, SystemExit):
+    print("--------------")
+    print("Program halted")
+    print("--------------")
