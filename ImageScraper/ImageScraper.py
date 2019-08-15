@@ -1,6 +1,10 @@
 import urllib.request, requests, os
+#URL of website to pull images from
 URL = "https://designyoutrust.com/2019/08/artist-creates-modern-landscapes-in-his-unique-abstract-style/"
+#location to save images to
 PATH = "D:/Pictures/PulledFromInternet/"
+
+#set to JPEG by default 
 EXTENSTION = ".jpg"
 
 
