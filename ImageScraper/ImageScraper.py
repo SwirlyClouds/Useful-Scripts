@@ -1,6 +1,6 @@
 import urllib.request, requests, os
 
-#URL of website to pull images from
+#URL of webspage to pull images from
 URL = "https://designyoutrust.com/2019/01/artist-creates-illustrations-that-turn-loneliness-into-magic/"
 
 #location to save images to (can be left blank if using default path)
