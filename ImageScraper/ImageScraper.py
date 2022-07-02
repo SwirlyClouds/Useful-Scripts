@@ -47,12 +47,17 @@ def FindImages():
     foundSource = False
     IMGTag = False
     FileURL = ""
+    # get content of webpage
     r = requests.get(URL)
+
+    #iterate through webpage content 
     for i in range(len(r.text)):
+        #split webpage into tags
         character = r.text[i]
         FileURL = ""
         foundSource = False
         if currentLine == "<img":
+            #if found an image tag look for source
             IMGTag = True
             print("Found img tag")
             currentLine = ""
@@ -68,6 +73,7 @@ def FindImages():
                         FileURL += character
                         
                     else:
+                        # download image if the source is found
                         print("Attempting download...")
                         DownloadIMG(FileURL)
                         currentLine = ""
@@ -83,6 +89,11 @@ def FindImages():
     if not IMGTag:
         print("No img tags found")
     return
+
+
+# 
+# Load file locations for storing scraped images
+#
 def init():
     global PATH
     global name
@@ -109,12 +120,15 @@ def init():
     else:    
         print("Directory " , PATH ,  " already exists")
     return
-init()
-try:
-    FindImages()
-except (KeyboardInterrupt, SystemExit):
-    print("--------------")
-    print("Program halted")
-    print("--------------")
-except:
-    print("Error Occurred")
+
+
+if __name__ == "__main__":
+    init()
+    try:
+        FindImages()
+    except (KeyboardInterrupt, SystemExit):
+        print("--------------")
+        print("Program halted")
+        print("--------------")
+    except:
+        print("Error Occurred")
